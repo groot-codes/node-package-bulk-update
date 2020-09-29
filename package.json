@@ -1,0 +1,23 @@
+{
+    "name": "npm-module-update",
+    "version": "0.0.1",
+    "description": "",
+    "main": "./src/index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+        "nmu": "./src/index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.20.0",
+        "chalk": "^4.1.0",
+        "inquirer": "^7.3.3",
+        "ora": "^5.1.0",
+        "shelljs": "^0.8.4",
+        "yargs": "^16.0.3"
+    }
+}
