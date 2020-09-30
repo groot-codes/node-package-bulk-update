@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs'
-import { hideBin } from 'yargs/helpers'
 import axios from 'axios'
 import { promises as fsPromises } from 'fs'
 import inquirer from 'inquirer'
+
+const { helpers: { hideBin } } = yargs
 
 const { readFile } = fsPromises
 const npmsIoBaseUrl = 'https://api.npms.io/v2'
