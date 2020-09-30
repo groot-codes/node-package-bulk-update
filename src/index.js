@@ -5,12 +5,10 @@ import axios from 'axios'
 import { promises as fsPromises } from 'fs'
 import inquirer from 'inquirer'
 
-const { helpers: { hideBin } } = yargs
-
 const { readFile } = fsPromises
 const npmsIoBaseUrl = 'https://api.npms.io/v2'
 
-const options = yargs(hideBin(process.argv)).options({
+const options = yargs().options({
     url: {
         type: 'string',
         default: './package.json',
@@ -60,7 +58,8 @@ const main = async ({ url, update }) => {
     process.stdout.cursorTo(0)
     process.stdout.write(`${updatable.length} modules can be updated.`)
     process.stdout.write('\n')
-    console.table(updatable)
+
+    if (updatable.length) console.table(updatable)
 
     if (updatable.length && !update) {
         const { shouldUpdateAll } = await inquirer.prompt({
