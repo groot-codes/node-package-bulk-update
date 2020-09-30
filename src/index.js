@@ -27,7 +27,7 @@ const getModuleInfo = async module => {
     return data
 }
 
-const getModuleVersion = async module => {
+const getLatestModuleVersion = async module => {
     const moduleInfo = await getModuleInfo(module)
     return moduleInfo.collected.metadata.version
 }
@@ -45,7 +45,7 @@ const main = async ({ url, update }) => {
         process.stdout.cursorTo(0)
         process.stdout.write(`Checking ${module}...`)
         const currentVersion = dependencies[module]
-        const latestVersion = await getModuleVersion(module)
+        const latestVersion = await getLatestModuleVersion(module)
         const updatable = !currentVersion.includes(latestVersion)
         results.push({
             module,
@@ -62,25 +62,42 @@ const main = async ({ url, update }) => {
     console.table(updatable)
 
     if (updatable.length && !update) {
-        const { shouldUpdate } = await inquirer.prompt({
+        const { shouldUpdateAll } = await inquirer.prompt({
             type: 'confirm',
-            name: 'shouldUpdate',
-            message: 'Update?',
+            name: 'shouldUpdateAll',
+            message: 'Update all?',
         })
 
-        if (!shouldUpdate) {
-            let updateCommand = 'npm install'
-            for (const u of updatable) {
-                updateCommand += ` ${u.module}@latest`
+        if (!shouldUpdateAll) {
+            const { shouldUpdateSome } = await inquirer.prompt({
+                type: 'confirm',
+                name: 'shouldUpdateSome',
+                message: 'Update some?',
+            })
+
+            // Update nothing...
+            if (!shouldUpdateSome) {
+                let updateCommand = 'npm install'
+                for (const u of updatable) {
+                    updateCommand += ` ${u.module}@latest`
+                }
+                console.log('')
+                console.log('Okay. In case you change your mind... :)')
+                console.log('')
+                console.log(updateCommand)
+                console.log('')
             }
-            console.log('')
-            console.log('In case you change your mind...')
-            console.log('')
-            console.log(updateCommand)
-            console.log('')
+
+            // Update some
+            if (shouldUpdateSome) {
+                console.log('')
+                console.log('Choose which ones to update:')
+                console.log('')
+            }
         }
 
-        if (shouldUpdate) {
+        // Update all
+        if (shouldUpdateAll) {
             console.log('')
             console.log('Im on it... :)')
             console.log('')

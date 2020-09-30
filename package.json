@@ -5,10 +5,17 @@
     "main": "./src/index.js",
     "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "babel src --delete-dir-on-start --out-dir ./lib",
+        "link": "npm link",
+        "build:watch": "nodemon --exec npm run build",
+        "start": "npm run build && npm run link && npm run build:watch",
+        "setup": "npm run build && npm run link",
+        "unlink": "npm unlink",
+        "clean": "rm -rf ./lib",
+        "remove": "npm run unlink && npm run clean"
     },
     "bin": {
-        "npbu": "./src/index.js"
+        "npbu": "./lib/index.js"
     },
     "author": "",
     "license": "ISC",
@@ -19,5 +26,12 @@
         "ora": "^5.1.0",
         "shelljs": "^0.8.4",
         "yargs": "^16.0.3"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.11.6",
+        "@babel/core": "^7.11.6",
+        "@babel/node": "^7.10.5",
+        "@babel/preset-env": "^7.11.5",
+        "nodemon": "^2.0.4"
     }
 }
