@@ -6,9 +6,17 @@ import { promises as fsPromises } from 'fs'
 import inquirer from 'inquirer'
 import shell from 'shelljs'
 import ora from 'ora'
+import { stderr } from 'process'
 
 const { readFile } = fsPromises
 const npmsIoBaseUrl = 'https://api.npms.io/v2'
+
+const exec = async command =>
+    new Promise((resolve, reject) => {
+        shell.exec(command, { silent: true }, (code, stdout, stderr) => {
+            resolve({ exitCode: code, output: stdout, error: stderr })
+        })
+    })
 
 const options = yargs().options({
     url: {
@@ -94,7 +102,7 @@ const main = async ({ url, update }) => {
             // Update some
             if (shouldUpdateSome) {
                 console.log('')
-                console.log('Choose which ones to update:')
+                console.log('Feature under construction :(')
                 console.log('')
             }
         }
@@ -104,11 +112,34 @@ const main = async ({ url, update }) => {
             console.log('')
             console.log('Im on it... :)')
             console.log('')
-            const spinner = ora('Loading unicorns...').start()
-            console.log(`Running: ${updateCommand}`)
-            const result = await shell.exec(updateCommand, { async: true })
-            console.log(result)
-            spinner.succeed('Unicorns loaded! :)')
+            const spinner = ora('Updating modules...').start()
+            const { exitCode, output, error } = await exec(updateCommand)
+
+            if (!exitCode) {
+                spinner.succeed('Unicorns loaded! :)')
+                console.log('What I wanted to say was: *khm* Modules updated.')
+                console.log("Shut up! Here's the log:")
+                console.log(output)
+
+                if (error) {
+                    console.log('')
+                    const { showWarnings } = await inquirer.prompt({
+                        type: 'confirm',
+                        name: 'showWarnings',
+                        message: 'Got some warnings. Wanna see?',
+                    })
+
+                    if (showWarnings) console.log(error)
+                }
+            }
+
+            if (exitCode) {
+                spinner.fail('Something went wrong...')
+                console.error(error)
+            }
+
+            console.log('')
+            console.log('All done. Bye bye!')
         }
     }
 }
