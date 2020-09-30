@@ -119,6 +119,7 @@ const main = async ({ url, update }) => {
                 spinner.succeed('Unicorns loaded! :)')
                 console.log('What I wanted to say was: *khm* Modules updated.')
                 console.log("Shut up! Here's the log:")
+                console.log('')
                 console.log(output)
 
                 if (error) {
@@ -140,6 +141,7 @@ const main = async ({ url, update }) => {
 
             console.log('')
             console.log('All done. Bye bye!')
+            console.log('')
         }
     }
 }
