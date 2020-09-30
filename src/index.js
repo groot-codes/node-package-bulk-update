@@ -5,6 +5,7 @@ import axios from 'axios'
 import { promises as fsPromises } from 'fs'
 import inquirer from 'inquirer'
 import shell from 'shelljs'
+import ora from 'ora'
 
 const { readFile } = fsPromises
 const npmsIoBaseUrl = 'https://api.npms.io/v2'
@@ -103,7 +104,10 @@ const main = async ({ url, update }) => {
             console.log('')
             console.log('Im on it... :)')
             console.log('')
-            shell.exec()
+            const spinner = ora('Loading unicorns...').start()
+            const result = await shell.exec(updateCommand, { async: true })
+            console.log(result)
+            spinner.succeed('Unicorns loaded! :)')
         }
     }
 }
