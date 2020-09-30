@@ -4,6 +4,7 @@ import yargs from 'yargs'
 import axios from 'axios'
 import { promises as fsPromises } from 'fs'
 import inquirer from 'inquirer'
+import shell from 'shelljs'
 
 const { readFile } = fsPromises
 const npmsIoBaseUrl = 'https://api.npms.io/v2'
@@ -61,6 +62,11 @@ const main = async ({ url, update }) => {
 
     if (updatable.length) console.table(updatable)
 
+    let updateCommand = 'npm install'
+    for (const u of updatable) {
+        updateCommand += ` ${u.module}@latest`
+    }
+
     if (updatable.length && !update) {
         const { shouldUpdateAll } = await inquirer.prompt({
             type: 'confirm',
@@ -77,10 +83,6 @@ const main = async ({ url, update }) => {
 
             // Update nothing...
             if (!shouldUpdateSome) {
-                let updateCommand = 'npm install'
-                for (const u of updatable) {
-                    updateCommand += ` ${u.module}@latest`
-                }
                 console.log('')
                 console.log('Okay. In case you change your mind... :)')
                 console.log('')
@@ -101,6 +103,7 @@ const main = async ({ url, update }) => {
             console.log('')
             console.log('Im on it... :)')
             console.log('')
+            shell.exec()
         }
     }
 }
