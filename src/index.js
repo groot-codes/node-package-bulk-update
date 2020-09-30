@@ -105,6 +105,7 @@ const main = async ({ url, update }) => {
             console.log('Im on it... :)')
             console.log('')
             const spinner = ora('Loading unicorns...').start()
+            console.log(`Running: ${updateCommand}`)
             const result = await shell.exec(updateCommand, { async: true })
             console.log(result)
             spinner.succeed('Unicorns loaded! :)')
